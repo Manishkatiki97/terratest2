@@ -14,7 +14,7 @@ resource "aws_instance" "example" {
   # Run an Ubuntu 18.04 AMI on the EC2 instance.
   ami                    = "ami-0d5d9d301c853a04a"
   instance_type          = "t2.micro"
-  //vpc_security_group_ids = [aws_security_group.instance.id]
+  vpc_security_group_ids = [aws_security_group.instance.id]
 
   # When the instance boots, start a web server on port 8080 that responds with "Hello, World!".
   user_data = <<EOF
@@ -25,14 +25,14 @@ EOF
 }
 
 # Allow the instance to receive requests on port 8080.
-# resource "aws_security_group" "instance" {
-#   ingress {
-#     from_port   = 8080
-#     to_port     = 8080
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-# }
+resource "aws_security_group" "instance" {
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 
 # Output the instance's public IP address.
 output "public_ip" {
